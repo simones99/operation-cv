@@ -1,0 +1,24 @@
+# Core HTTP requests
+requests
+
+# File I/O for resumes and job descriptions
+pdfplumber
+python-docx  # DOCX file parsing and writing
+fpdf  # PDF export
+
+# NLP & similarity matching
+sentence-transformers
+transformers
+huggingface_hub
+tokenizers
+scikit-learn
+torch
+
+# GUI
+streamlit
+
+# Utility and text processing
+spacy
+tqdm
+numpy 
+pandas
