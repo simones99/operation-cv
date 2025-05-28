@@ -1,20 +1,27 @@
-# CV Tailor Agent
+# 🧠 Operation CV
 
-A privacy-first, local AI tool to tailor your CV to any job description. Built with Python, Streamlit, and local LLMs (via LM Studio), this app helps you generate a job-specific CV and estimate your interview probability—all on your machine, with no data leaving your device.
+### Tailor your CV with AI—privately and locally.
+Operation CV is a privacy-first, local AI-powered tool that helps you rewrite and optimize your CV for any job description—entirely on your machine. Built with Python, Streamlit, and local LLMs via LM Studio, this app parses your CV and job descriptions, scores relevance, tailors your content, and estimates your interview probability—all without sending a single byte to the cloud.
+---
+
+## 🚀 Features
+  ### 📄 CV & Job Description Parsing
+    Upload your CV and job description in PDF, DOCX, or TXT formats. The app robustly extracts sections from real-world, messy CVs and JDs.
+  ### 📊 Section Relevance Scoring
+    Each CV section is semantically compared to the job description. Get a visual bar chart showing what matches—and what doesn’t.
+  ###	🧬 AI Tailoring with Local LLMs
+    Run your favorite Mistral, LLaMA 3, or other models locally via LM Studio to rewrite your CV for the job and industry you choose.
+  ### 🧠 Interview Probability Estimation
+    See a before-and-after estimate of how likely your CV is to land an interview, based on keyword and semantic overlap.
+  ### 🏭 Industry-Aware Prompting
+  Custom prompts guide the LLM based on the selected industry—tech, finance, healthcare, and more.
+  ### 🖼️ Streamlit UI
+  A smooth, responsive UI with file upload, live previews, downloadable results, and error handling—all in a single-page web app.
+
 
 ---
 
-## Features
-- **Robust CV & JD Parsing:** Supports PDF, DOCX, and TXT for both CV and job description. Handles real-world CV sectioning.
-- **Automatic Section Relevance:** Semantic similarity scoring for each CV section vs. the job description, with bar chart visualization.
-- **Local LLM Tailoring:** Uses LM Studio (Mistral or other local models) to rewrite your CV for the target job and industry.
-- **Industry-Aware Prompting:** Custom instructions for different industries/sectors.
-- **Interview Probability Estimate:** Calculates your chance of getting an interview before and after tailoring, based on semantic and skill overlap.
-- **User-Friendly UI:** Streamlit interface with error handling, file upload, and download of tailored CV (DOCX/PDF).
-
----
-
-## Quick Start
+## ⚡ Quick Start
 
 ### 1. **Install Python 3.10 or 3.11**
 - Use [pyenv](https://github.com/pyenv/pyenv) or your OS package manager.
@@ -42,12 +49,16 @@ streamlit run app/streamlit_app.py
 
 ---
 
-## Usage
-1. **Upload your CV** (PDF, DOCX, or TXT).
-2. **Upload or paste the Job Description**.
-3. **Select output language, format, and industry** in the sidebar.
-4. **Click "Tailor My CV"**. Wait for the local LLM to generate your tailored CV.
-5. **Preview and download** the tailored CV. See section relevance and interview probability before/after tailoring in the sidebar.
+### 🧪 How It Works
+- Upload Your CV & Job Description
+- The app parses both files and breaks them into logical sections
+- Each CV section is scored for relevance using semantic similarity
+- Local LLM rewrites your CV based on job/industry context
+- App displays:
+	-	Tailored CV preview
+	-	Section relevance bar chart
+	-	Interview probability score: original vs. optimized
+-	Download your optimized CV as DOCX or PDF
 
 ---
 
@@ -99,3 +110,4 @@ outputs/                  # Generated tailored CVs
 ## Credits
 - Built by Simone Mezzabotta, 2025
 - MIT License
+- Built with ❤️ and a strong belief in user data privacy
