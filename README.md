@@ -1,68 +1,75 @@
 # 🧠 Operation CV
 
 ### Tailor your CV with AI—privately and locally.
+
 Operation CV is a privacy-first, local AI-powered tool that helps you rewrite and optimize your CV for any job description—entirely on your machine. Built with Python, Streamlit, and local LLMs via LM Studio, this app parses your CV and job descriptions, scores relevance, tailors your content, and estimates your interview probability—all without sending a single byte to the cloud.
+
 ---
 
-## 🚀 Features
-  ### 📄 CV & Job Description Parsing
-    Upload your CV and job description in PDF, DOCX, or TXT formats. The app robustly extracts sections from real-world, messy CVs and JDs.
-  ### 📊 Section Relevance Scoring
-    Each CV section is semantically compared to the job description. Get a visual bar chart showing what matches—and what doesn’t.
-  ###	🧬 AI Tailoring with Local LLMs
-    Run your favorite Mistral, LLaMA 3, or other models locally via LM Studio to rewrite your CV for the job and industry you choose.
-  ### 🧠 Interview Probability Estimation
-    See a before-and-after estimate of how likely your CV is to land an interview, based on keyword and semantic overlap.
-  ### 🏭 Industry-Aware Prompting
-  Custom prompts guide the LLM based on the selected industry—tech, finance, healthcare, and more.
-  ### 🖼️ Streamlit UI
-  A smooth, responsive UI with file upload, live previews, downloadable results, and error handling—all in a single-page web app.
+## 🚀 Features
 
+- **CV & Job Description Parsing**
+  - Upload your CV and job description in PDF, DOCX, or TXT formats. The app robustly extracts sections from real-world, messy CVs and JDs.
+- **Section Relevance Scoring**
+  - Each CV section is semantically compared to the job description. Get a visual bar chart showing what matches—and what doesn’t.
+- **AI Tailoring with Local LLMs**
+  - Run your favorite Mistral, LLaMA 3, or other models locally via LM Studio to rewrite your CV for the job and industry you choose.
+- **Interview Probability Estimation**
+  - See a before-and-after estimate of how likely your CV is to land an interview, based on keyword and semantic overlap.
+- **Industry-Aware Prompting**
+  - Custom prompts guide the LLM based on the selected industry—tech, finance, healthcare, and more.
+- **Streamlit UI**
+  - A smooth, responsive UI with file upload, live previews, downloadable results, and error handling—all in a single-page web app.
 
 ---
 
 ## ⚡ Quick Start
 
-### 1. **Install Python 3.10 or 3.11**
-- Use [pyenv](https://github.com/pyenv/pyenv) or your OS package manager.
+1. **Install Python 3.10 or 3.11**
+   - Use [pyenv](https://github.com/pyenv/pyenv) or your OS package manager.
 
-### 2. **Set Up Virtual Environment**
-```sh
-python3.11 -m venv .venv
-source .venv/bin/activate
-```
+2. **Set Up Virtual Environment**
 
-### 3. **Install Requirements**
-```sh
-pip install --upgrade pip
-pip install -r requirements.txt
-```
+   ```sh
+   python3.11 -m venv .venv
+   source .venv/bin/activate
+   ```
 
-### 4. **Install & Run LM Studio**
-- Download [LM Studio](https://lmstudio.ai/) and run a local LLM (e.g., Mistral, Llama 3, etc.) on port 1234.
-- Make sure the model supports chat/completion API compatible with OpenAI format.
+3. **Install Requirements**
 
-### 5. **Run the App**
-```sh
-streamlit run app/streamlit_app.py
-```
+   ```sh
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+4. **Install & Run LM Studio**
+   - Download [LM Studio](https://lmstudio.ai/) and run a local LLM (e.g., Mistral, Llama 3, etc.) on port 1234.
+   - Make sure the model supports chat/completion API compatible with OpenAI format.
+
+5. **Run the App**
+
+   ```sh
+   streamlit run app/streamlit_app.py
+   ```
 
 ---
 
-### 🧪 How It Works
-- Upload Your CV & Job Description
+## 🧪 How It Works
+
+- Upload your CV & Job Description
 - The app parses both files and breaks them into logical sections
 - Each CV section is scored for relevance using semantic similarity
 - Local LLM rewrites your CV based on job/industry context
 - App displays:
-	-	Tailored CV preview
-	-	Section relevance bar chart
-	-	Interview probability score: original vs. optimized
--	Download your optimized CV as DOCX or PDF
+  - Tailored CV preview
+  - Section relevance bar chart
+  - Interview probability score: original vs. optimized
+- Download your optimized CV as DOCX or PDF
 
 ---
 
-## Troubleshooting
+## 🛠️ Troubleshooting
+
 - **Dependency errors:**
   - Use Python 3.10 or 3.11. Newer versions (e.g., 3.13) may not work with ML libraries.
   - If you see errors about `tokenizers`, `sentencepiece`, or `huggingface_hub`, ensure you have the correct versions (see `requirements.txt`).
@@ -76,7 +83,8 @@ streamlit run app/streamlit_app.py
 
 ---
 
-## Next Steps & Development
+## 🏗️ Next Steps & Development
+
 - **Skill Extraction:** Improve skill extraction for more accurate interview probability.
 - **Advanced Error Handling:** Add more robust logging and user feedback.
 - **Batch Processing:** Allow tailoring multiple CVs/JDs at once.
@@ -87,8 +95,9 @@ streamlit run app/streamlit_app.py
 
 ---
 
-## Project Structure
-```
+## 📁 Project Structure
+
+```text
 core/
     cv_handler.py         # CV parsing and section extraction
     jd_handler.py         # Job description parsing
@@ -107,7 +116,8 @@ outputs/                  # Generated tailored CVs
 
 ---
 
-## Credits
+## 🏅 Credits
+
 - Built by Simone Mezzabotta, 2025
 - MIT License
 - Built with ❤️ and a strong belief in user data privacy
