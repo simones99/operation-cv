@@ -1,10 +1,11 @@
 # 🧠 Operation CV
 
 ### Tailor your CV with AI—privately and locally.
+
 Operation CV is a privacy-first, local AI-powered tool that helps you rewrite and optimize your CV for any job description—entirely on your machine. Built with Python, Streamlit, and local LLMs via LM Studio, this app parses your CV and job descriptions, scores relevance, tailors your content, and estimates your interview probability—all without sending a single byte to the cloud.
 ---
 
-## 🚀 Features
+🚀 Features
   ### 📄 CV & Job Description Parsing
     Upload your CV and job description in PDF, DOCX, or TXT formats. The app robustly extracts sections from real-world, messy CVs and JDs.
   ### 📊 Section Relevance Scoring
