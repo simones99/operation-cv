@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["sections"],
+  "properties": {
+    "sections": {
+      "type": "object",
+      "required": ["summary", "experience", "education", "skills"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Professional summary or profile section - Should be 3-4 impactful sentences highlighting key qualifications and career goals",
+          "minLength": 100,
+          "maxLength": 300
+        },
+        "experience": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["title", "company", "period", "description"],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Job title",
+                "minLength": 3
+              },
+              "company": {
+                "type": "string",
+                "description": "Company name",
+                "minLength": 2
+              },
+              "period": {
+                "type": "string",
+                "description": "Employment period (e.g., 'Jan 2020 - Present')",
+                "pattern": "^[A-Za-z]+ [0-9]{4} - ([A-Za-z]+ [0-9]{4}|Present)$"
+              },
+              "description": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 5,
+                "items": {
+                  "type": "string",
+                  "minLength": 30,
+                  "maxLength": 150,
+                  "description": "Each bullet point should include an action verb, quantifiable achievement, and impact"
+                },
+                "description": "List of responsibilities and achievements with measurable results"
+              }
+            }
+          }
+        },
+        "education": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["degree", "institution", "period"],
+            "properties": {
+              "degree": {
+                "type": "string",
+                "description": "Degree or certification name",
+                "minLength": 5
+              },
+              "institution": {
+                "type": "string",
+                "description": "Institution name",
+                "minLength": 5
+              },
+              "period": {
+                "type": "string",
+                "description": "Study period",
+                "pattern": "^[A-Za-z]+ [0-9]{4} - ([A-Za-z]+ [0-9]{4}|Present)$"
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 10,
+                  "maxLength": 150
+                },
+                "description": "Additional details about the education"
+              }
+            }
+          }
+        },
+        "skills": {
+          "type": "object",
+          "required": ["technical", "soft"],
+          "properties": {
+            "technical": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 15,
+              "items": {
+                "type": "string",
+                "minLength": 2
+              },
+              "description": "Technical skills and tools"
+            },
+            "soft": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 3
+              },
+              "description": "Soft skills and competencies"
+            }
+          }
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 5
+              },
+              "description": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 3,
+                "items": {
+                  "type": "string",
+                  "minLength": 20,
+                  "maxLength": 150
+                }
+              }
+            }
+          }
+        },
+        "publications": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 20
+          }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["language", "level"],
+            "properties": {
+              "language": {
+                "type": "string",
+                "minLength": 2
+              },
+              "level": {
+                "type": "string",
+                "enum": ["Native", "Fluent", "Professional", "Intermediate", "Basic"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

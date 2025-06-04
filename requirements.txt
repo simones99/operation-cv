@@ -1,5 +1,8 @@
 # Core HTTP requests
-requests
+requests>=2.31.0
+
+# JSON Schema validation
+jsonschema>=4.19.0
 
 # File I/O for resumes and job descriptions
 pdfplumber
@@ -20,5 +23,6 @@ streamlit
 # Utility and text processing
 spacy
 tqdm
-numpy 
+numpy
 pandas
+langdetect

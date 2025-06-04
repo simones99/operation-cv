@@ -12,11 +12,22 @@ Operation CV is a privacy-first, local AI-powered tool that helps you rewrite an
 - Upload your CV and job descriptions in PDF, DOCX, or TXT formats
 - Robust section extraction from real-world, messy CVs and JDs
 - Smart section normalization for consistent template mapping
+- Automatic skill extraction and matching
 
-### 📊 Section Relevance Analysis
-- Semantic comparison of each CV section against job requirements
-- Visual bar chart showing section-by-section relevance
-- Color-coded scoring with detailed explanations
+### 📊 Advanced Scoring System
+- **Interview Probability Score**: Get a clear percentage of how well your CV matches the job
+- **Target Score Setting**: Set your desired interview probability and get tailored suggestions
+- **Component Analysis**:
+  - Content Match (50%): Semantic alignment with job requirements
+  - Skill Coverage (30%): Required skills found in your CV
+  - Keyword Density (20%): Effective use of relevant keywords
+- **Gap Analysis**: See exactly how far you are from your target score
+
+### 🎯 Smart Suggestions
+- Personalized improvement recommendations based on your scores
+- Missing skills identification and integration suggestions
+- Content alignment tips for better semantic matching
+- Keyword optimization guidance
 
 ### 🎨 Template System
 - Customizable DOCX templates for consistent CV formatting
@@ -33,11 +44,6 @@ Operation CV is a privacy-first, local AI-powered tool that helps you rewrite an
 - Industry-specific prompting for targeted optimization
 - Language selection (English UK/US, French, Spanish, Italian)
 
-### 📊 Interview Probability Estimation
-- Before-and-after probability scoring
-- Based on keyword matching and semantic similarity
-- Industry-specific scoring adjustments
-
 ### 💾 Save & Export
 - Save applications to SQLite database for future reference
 - Export as DOCX or PDF using your templates
@@ -50,39 +56,73 @@ Operation CV is a privacy-first, local AI-powered tool that helps you rewrite an
 
 ### 🖼️ Enhanced UI/UX
 - Clean, responsive Streamlit interface
+- Interactive probability scoring dashboard
+- Visual component score analysis
 - Progress tracking for long operations
 - Detailed error messages and recovery
-- File cleanup and management
-- Template preview and validation
 
 ---
 
 ## ⚡ Quick Start
 
 1. **Install Python 3.10 or 3.11**
-   - Use [pyenv](https://github.com/pyenv/pyenv) or your OS package manager
-
-2. **Set Up Virtual Environment**
    ```sh
-   python3.11 -m venv .venv
-   source .venv/bin/activate
+   # Using pyenv (recommended)
+   pyenv install 3.11
+   pyenv local 3.11
+   # Or use your OS package manager
    ```
 
-3. **Install Requirements**
+2. **Clone the Repository**
+   ```sh
+   git clone https://github.com/yourusername/OperationCV.git
+   cd OperationCV
+   ```
+
+3. **Set Up Virtual Environment**
+   ```sh
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+4. **Install Requirements**
    ```sh
    pip install --upgrade pip
    pip install -r requirements.txt
    ```
 
-4. **Install & Run LM Studio**
+5. **Install & Run LM Studio**
    - Download [LM Studio](https://lmstudio.ai/)
    - Run a local LLM (Mistral, Llama 3, etc.) on port 1234
    - Model must support OpenAI-compatible chat API
 
-5. **Run the App**
+6. **Run the App**
    ```sh
    streamlit run app/streamlit_app.py
    ```
+
+---
+
+## 📊 Understanding the Scoring System
+
+### Interview Probability Score
+The overall score is calculated using three weighted components:
+- **Content Match (50%)**: Semantic similarity between your CV and the job description
+- **Skill Coverage (30%)**: Percentage of required skills found in your CV
+- **Keyword Density (20%)**: How effectively you've used relevant keywords
+
+### Target Score
+1. Set your desired interview probability (default 80%)
+2. The system will:
+   - Calculate the gap between current and target scores
+   - Provide specific suggestions to reach your target
+   - Highlight areas needing immediate improvement
+
+### Component Scores
+Each component is scored from 0-100%:
+- **Content Match**: Uses semantic analysis to measure how well your content aligns
+- **Skill Coverage**: Compares required skills with those in your CV
+- **Keyword Density**: Analyzes the effective use of relevant keywords
 
 ---
 
@@ -96,100 +136,63 @@ Operation CV is a privacy-first, local AI-powered tool that helps you rewrite an
 
 ---
 
-## 🧪 How It Works
+## 🛠️ Advanced Configuration
 
-1. **File Upload & Processing**
-   - Upload CV & Job Description
-   - Smart parsing into logical sections
-   - Template validation and preparation
+### JSON Schema
+The CV structure is defined in `core/cv_schema.json` and includes:
+- Required sections (summary, experience, education, skills)
+- Optional sections (projects, publications, languages)
+- Validation rules for each section
+- Format requirements and constraints
 
-2. **Analysis**
-   - Section-by-section semantic scoring
-   - Keyword extraction and matching
-   - Interview probability calculation
-
-3. **AI Optimization**
-   - Industry-specific prompt generation
-   - Local LLM tailoring of content
-   - Section normalization for template
-
-4. **Output & Storage**
-   - Preview tailored content
-   - Apply template formatting
-   - Save to database (optional)
-   - Export as DOCX or PDF
+### Language Models
+- Default port: 1234 (configurable)
+- Supported models: Any OpenAI-compatible chat model
+- Recommended: Mistral-7B, LLaMA-3, or similar
+- Min 8GB VRAM recommended
 
 ---
 
-## 🛠️ Troubleshooting
+## 🎯 Best Practices
 
-### Common Issues
-- **Template errors:**
-  - Ensure DOCX templates use correct variable syntax
-  - Check `/template/example_template.md` for valid variables
-  - Use the default template as a reference
+1. **CV Preparation**
+   - Use clear section headings
+   - Include quantifiable achievements
+   - Keep formatting simple
+   - Use standard section names
 
-- **Dependency errors:**
-  - Use Python 3.10 or 3.11 (3.13 may have ML library issues)
-  - Check `requirements.txt` for correct versions
-  - For `tokenizers`, `sentencepiece`, or `huggingface_hub` errors, reinstall requirements
+2. **Job Description Analysis**
+   - Include full job posting
+   - Ensure requirements section is included
+   - More detail = better matching
 
-- **LM Studio connection:**
-  - Ensure LM Studio is running on port 1234
-  - Check for OpenAI-compatible API at `http://127.0.0.1:1234/v1/chat/completions`
+3. **Template Usage**
+   - Test templates with sample data first
+   - Keep styling minimal
+   - Use all required variables
+   - Follow spacing guidelines
 
-- **File issues:**
-  - Try different file formats if parsing fails
-  - Check for file corruption
-  - Ensure proper section headings in CVs
-
-### Error Recovery
-- The app includes automatic cleanup of temporary files
-- Failed operations won't leave orphaned files
-- You can always regenerate outputs
+4. **Optimal Results**
+   - Set realistic target scores
+   - Review and implement all suggestions
+   - Focus on gap analysis recommendations
+   - Update skills section comprehensively
 
 ---
 
-## 📁 Project Structure
+## 🔄 Recent Updates
 
-```text
-OperationCV/
-├── app/
-│   └── streamlit_app.py      # Main Streamlit application
-├── core/
-│   ├── cv_handler.py         # CV parsing and processing
-│   ├── file_utils.py         # File management utilities
-│   ├── industry_instructions # Industry-specific prompts
-│   ├── jd_handler.py         # Job description processing
-│   ├── llm_client.py        # Local LLM interaction
-│   ├── probability.py        # Interview probability calc
-│   ├── prompt_utils.py       # Prompt management
-│   └── save_utils.py         # File saving utilities
-├── template/
-│   ├── cv_template.docx      # Default CV template
-│   ├── example_template.md   # Template documentation
-│   └── README.md            # Template usage guide
-├── prompts/                  # System prompts
-├── outputs/                  # Generated files
-└── requirements.txt         # Python dependencies
-```
+- Enhanced probability scoring system with component analysis
+- Added target score setting and gap analysis
+- Improved skill extraction and matching
+- Better visualization of component scores
+- Enhanced suggestion system
+- Fixed percentage calculation issues
+- Added comprehensive scoring documentation
 
 ---
 
-## 🚀 Recent Improvements
-
-- Added template system with variable documentation
-- Enhanced file management and cleanup
-- Improved error handling and user feedback
-- Added better saved applications viewer
-- Template validation and verification
-- Progress tracking for long operations
-- Automatic template fallback
-- Enhanced PDF export quality
-
----
-
-## 🏗️ Future Development
+## 🚀 Roadmap
 
 - [ ] Advanced template gallery
 - [ ] Custom industry instruction editor
@@ -199,15 +202,30 @@ OperationCV/
 - [ ] Docker deployment
 - [ ] Template sharing system
 - [ ] Enhanced PDF formatting
+- [ ] AI-powered template recommendations
+- [ ] Historical score tracking
+- [ ] Comparative analysis features
 
 ---
 
-## 📝 License
+## 📝 Contributing
 
-See `LICENSE` file for details.
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ---
 
-## 🤝 Contributing
+## 📄 License
 
-Contributions are welcome! Please check the issues page for current tasks.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with [Streamlit](https://streamlit.io/)
+- LLM support via [LM Studio](https://lmstudio.ai/)
+- Semantic analysis using [Sentence Transformers](https://www.sbert.net/)
