@@ -1,28 +1,106 @@
-# Operation CV Templates
+# CV Templates
 
-This folder contains templates and documentation for Operation CV.
+This folder contains template files and documentation for Operation CV.
 
-## Files:
-- `cv_template.docx` - Default CV template
-- `example_template.md` - Documentation and guide for creating templates
+## Files Overview
 
-## Using Templates
+1. `cv_template.docx` - Default CV template
+2. `custom_cv_template.docx` - Example custom template
+3. `example_template.md` - Detailed variable documentation
+4. `README.md` - This guide
 
-1. Open `cv_template.docx` to see an example template
-2. Create your own template using DOCX format
-3. Use variables like `{{ summary }}`, `{{ experience }}`, etc.
-4. Upload your template in the app's sidebar
-5. When exporting, your template will be filled with the tailored CV content
+## Quick Start Guide
 
-## Section Variables
+1. **Use Default Template**
+   - Start with `cv_template.docx`
+   - Already optimized for scoring
+   - Includes all required sections
 
-The app extracts these common CV sections:
-- Summary/Profile
-- Experience
-- Education
-- Skills
-- Projects
-- Languages
-- And more...
+2. **Customize Template**
+   - Copy `custom_cv_template.docx`
+   - Modify while keeping variables
+   - Test with sample data
 
-See `example_template.md` for a complete list of variables and usage tips.
+3. **Create New Template**
+   - Start with a clean DOCX file
+   - Add required variables (see below)
+   - Follow scoring guidelines
+
+## Required Variables
+
+Minimum required variables for optimal scoring:
+
+```
+{{ summary }}
+{{ experience }}
+{{ skills }}
+{{ education }}
+```
+
+## Template Best Practices
+
+1. **Format for Success**
+   - Use consistent fonts
+   - Keep styling minimal
+   - Maintain clear hierarchy
+
+2. **Section Order**
+   - Summary (top)
+   - Experience
+   - Skills
+   - Education
+   - Optional sections
+
+3. **Spacing Guidelines**
+   - Single line between items
+   - Double line between sections
+   - Consistent margins
+
+4. **Testing**
+   - Test with sample data
+   - Verify all variables work
+   - Check PDF export
+
+## Scoring Optimization
+
+Templates should be designed to optimize:
+
+1. **Content Match Score**
+   - Clear section headers
+   - Professional formatting
+   - Logical content flow
+
+2. **Skill Coverage**
+   - Dedicated skills section
+   - Space for categorization
+   - Room for proficiency levels
+
+3. **Keyword Density**
+   - Natural text flow
+   - Balanced spacing
+   - Room for context
+
+## Troubleshooting
+
+Common issues and solutions:
+
+1. **Variable Not Replacing**
+   - Check exact spelling
+   - Verify double curly braces
+   - Remove any extra spaces
+
+2. **Format Breaking**
+   - Simplify styles
+   - Check compatibility
+   - Use standard fonts
+
+3. **PDF Export Issues**
+   - Reduce complexity
+   - Check margins
+   - Verify page breaks
+
+## Need Help?
+
+- Check `example_template.md` for details
+- Test with default template
+- Review scoring documentation

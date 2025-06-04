@@ -20,9 +20,27 @@ Your DOCX template can use any of these variables:
 - `{{ extracurricular }}` - Extracurricular activities
 - `{{ content }}` - Full CV content (used if sections aren't detected)
 
+## Scoring Impact
+
+Different sections have varying impacts on your interview probability score:
+
+### High Impact (Focus Areas)
+- **Summary**: Key for Content Match score
+- **Experience**: Major contributor to all scoring components
+- **Skills**: Critical for Skill Coverage score
+- **Keywords**: Affects Keyword Density score
+
+### Medium Impact
+- **Projects**: Supplements Experience score
+- **Education**: Contributes to Content Match
+- **Languages**: Adds to overall relevance
+
+### Optional Impact
+- Publications, Interests, Awards: Use if relevant to position
+
 ## Example Template Structure
 
-Here's how a basic template might be structured:
+Here's how a template optimized for scoring might be structured:
 
 ```
 [YOUR NAME]
@@ -34,11 +52,11 @@ PROFESSIONAL SUMMARY
 EXPERIENCE
 {{ experience }}
 
-EDUCATION
-{{ education }}
-
 SKILLS & CERTIFICATIONS 
 {{ skills }}
+
+EDUCATION
+{{ education }}
 
 LANGUAGES
 {{ languages }}
@@ -46,17 +64,51 @@ LANGUAGES
 [Additional sections as needed...]
 ```
 
-## Tips for Best Results
+## Best Practices for High Scores
+
+1. **Summary Section**
+   - Place early in CV
+   - Include key industry terms
+   - Match job description tone
+
+2. **Experience Section**
+   - Use action verbs
+   - Include measurable achievements
+   - Mirror job description terminology
+
+3. **Skills Section**
+   - Group by category
+   - List most relevant first
+   - Include proficiency levels
+
+4. **Format Guidelines**
+   - Keep styling minimal
+   - Use consistent spacing
+   - Maintain clear section headers
+
+## Technical Requirements
 
 1. Create your template in DOCX format
-2. Use consistent formatting (fonts, spacing, etc.)
-3. Place variables exactly where the content should appear
-4. Test with different CVs to ensure compatibility
-5. Consider optional sections - they'll be skipped if empty
+2. Use exact variable names with double curly braces
+3. Include all required sections for scoring:
+   - summary
+   - experience
+   - skills
+   - education
 
-## Common Issues
+## Optimization Tips
 
-- If a section isn't found in the CV, its variable will be replaced with an empty string
-- Maintain proper spacing around variables
-- Complex formatting may need adjustment
-- Headers should match common CV section names for best results
+1. **For Content Match (50%)**
+   - Strong professional summary
+   - Detailed experience descriptions
+   - Relevant projects and achievements
+
+2. **For Skill Coverage (30%)**
+   - Comprehensive skills section
+   - Skills mentioned in context
+   - Technical and soft skills
+
+3. **For Keyword Density (20%)**
+   - Natural keyword placement
+   - Industry-specific terminology
+   - Consistent skill references
