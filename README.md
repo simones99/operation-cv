@@ -1,4 +1,4 @@
-# 🧠 Operation CV
+# 🥷🏻 Operation CV
 
 ### Tailor your CV with AI—privately and locally.
 
@@ -182,13 +182,34 @@ The CV structure is defined in `core/cv_schema.json` and includes:
 
 ## 🔄 Recent Updates
 
-- Enhanced probability scoring system with component analysis
-- Added target score setting and gap analysis
-- Improved skill extraction and matching
-- Better visualization of component scores
-- Enhanced suggestion system
+- Fixed JSON schema and parsing for CV suggestions
+- Improved error handling and logging in LLM client
+- Enhanced suggestion display in the UI
+- Updated CV schema to better match LLM response format
+- Added better validation for JSON responses
 - Fixed percentage calculation issues
 - Added comprehensive scoring documentation
+
+### LLM Response Format
+
+The system expects LLM responses in this JSON format:
+```json
+{
+  "sections": {
+    "summary": "Improved summary content...",
+    "education": "Improved education content...",
+    "experience": "Improved experience content...",
+    "skills": "Improved skills content..."
+  }
+}
+```
+
+Each section contains the improved content as a string, which can include:
+- Line breaks (`\n`) for formatting
+- Bullet points for better readability
+- Original content structure preserved
+- Enhanced wording and phrasing
+- Better keyword placement
 
 ---
 
