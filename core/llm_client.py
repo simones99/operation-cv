@@ -10,10 +10,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load CV schema
-SCHEMA_PATH = Path(__file__).parent / "cv_schema.json"
-with open(SCHEMA_PATH) as f:
-    CV_SCHEMA = json.load(f)
-
 def load_cv_schema():
     """Load the CV JSON schema from file"""
     schema_path = Path(__file__).parent / 'cv_schema.json'
@@ -22,123 +18,133 @@ def load_cv_schema():
     with open(schema_path) as f:
         return json.load(f)
 
-def ask_local_llm(prompt, system_prompt=None, temperature=0.7, use_schema=True):
+CV_SCHEMA = load_cv_schema()
+
+def ask_local_llm(prompt, system_prompt=None, temperature=0.7):
     """
-    Sends a prompt to the local LLM via /v1/chat/completions endpoint and returns the response.
-    Also returns the full messages list used for the request.
-    
-    Args:
-        prompt (str): The main prompt for the LLM
-        system_prompt (str, optional): System message to set the context
-        temperature (float, optional): Sampling temperature (0-1)
-        use_schema (bool, optional): Whether to enforce JSON schema for CV output
+    Send a prompt to the local LLM and return the response
     """
-    url = "http://127.0.0.1:1234/v1/chat/completions"
+    url = "http://localhost:1234/v1/chat/completions"
     messages = []
     
-    # Load schema if needed
-    schema = None
-    if use_schema:
-        try:
-            schema = load_cv_schema()
-            # Add schema to system prompt
-            schema_instruction = """
-            You MUST format your response as a JSON object according to this structure:
-            {
-              "type": "object",
-              "sections": {
-                "summary": "A clear professional summary",
-                "experience": [
-                  {
-                    "title": "Job title",
-                    "company": "Company name",
-                    "period": "Employment period",
-                    "description": ["Achievement 1", "Achievement 2"]
-                  }
-                ],
-                "education": [
-                  {
-                    "degree": "Degree name",
-                    "institution": "Institution name",
-                    "period": "Study period",
-                    "details": ["Detail 1", "Detail 2"]
-                  }
-                ],
-                "skills": {
-                  "technical": ["Skill 1", "Skill 2"],
-                  "soft": ["Skill 1", "Skill 2"]
-                }
-              }
-            }
-            
-            INSTRUCTIONS:
-            1. Return ONLY the JSON object
-            2. Use double quotes for strings
-            3. Include only sections that are relevant
-            4. Keep descriptions clear and concise
-            5. DO NOT add any explanatory text
-            """
-            if system_prompt:
-                system_prompt = f"{system_prompt}\n\n{schema_instruction}"
-            else:
-                system_prompt = schema_instruction
-        except Exception as e:
-            print(f"Warning: Could not load CV schema: {e}")
-    
+    # Add system message if provided
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
     else:
-        messages.append({"role": "system", "content": "You are a helpful assistant."})
+        # Default system prompt with clear output format instructions
+        messages.append({"role": "system", "content": """You are a CV analysis assistant.
+            Provide your response in this format:
+            {
+              "sections": {
+                "name of the section": "Your improved CV text here"
+              }
+            }
+            Keep the original professional level and roles."""})
+    
+    # Add user message
     messages.append({"role": "user", "content": prompt})
     
-    # Note: Keep payload minimal for LM Studio compatibility
+    # Configure the request payload with optimized settings for Apple Silicon
     payload = {
         "model": "local-model",
         "messages": messages,
         "temperature": temperature,
-        "max_tokens": 2000
+        "max_tokens": 2048,  # Reduced for faster responses
+        "top_p": 0.1,
+        "frequency_penalty": 0.0,
+        "presence_penalty": 0.0,
+        "stream": False,
+        "n_ctx": 2048,      # Reduced context window
+        "num_threads": 8    # Optimized for M-series chips
     }
+    
     try:
-        # Add headers for proper API communication
-        headers = {
-            "Content-Type": "application/json"
-        }
+        # Send request to LM Studio
+        headers = {"Content-Type": "application/json"}
         response = requests.post(url, json=payload, headers=headers)
         
-        # Log response for debugging
         if response.status_code != 200:
             logger.error(f"LM Studio API Error: Status {response.status_code}")
             logger.error(f"Response content: {response.text}")
             response.raise_for_status()
-            
+        
+        # Extract content from response
         content = response.json()['choices'][0]['message']['content']
+        logger.info(f"Raw LLM response: {content}")
         
-        # Validate JSON schema if needed
-        if use_schema and schema:
-            try:
-                # Parse the content as JSON
-                if isinstance(content, str):
-                    cv_data = json.loads(content)
-                else:
-                    cv_data = content
-                
-                # Validate the JSON structure
-                is_valid, error_message = validate_cv_json(cv_data, schema)
-                if not is_valid:
-                    raise ValueError(f"Invalid CV format: {error_message}")
-                    
-                logger.info("CV JSON validation successful")
-                
-            except json.JSONDecodeError:
-                return f"Error: LLM response is not valid JSON: {content}", messages
-            except Exception as e:
-                return f"Error: LLM response does not match schema: {e}", messages
-        
-        return content, messages
+        # Try to parse as JSON first
+        try:
+            data = json.loads(content)
+            # Return the parsed JSON object if it has the correct structure
+            if isinstance(data, dict) and 'sections' in data:
+                logger.info(f"Successfully parsed JSON with sections: {list(data['sections'].keys())}")
+                return data, None
+        except json.JSONDecodeError as e:
+            logger.warning(f"JSON parsing failed: {e}")
+            
+        # If JSON parsing failed, try to clean up the response
+        cleaned_content = validate_llm_response(content)
+        return cleaned_content, None
+            
     except requests.exceptions.RequestException as e:
-        return f"Error communicating with local LLM: {e}", messages
+        logger.error(f"Request failed: {e}")
+        raise
     except Exception as e:
-        return f"Unexpected error: {e}", messages
+        logger.error(f"Error processing response: {e}")
+        raise
+
+def extract_summary(content):
+    """Extract content and suggestions from the plain text response"""
+    try:
+        # Clean up the content and ensure it's a string
+        if not isinstance(content, str):
+            content = str(content)
+        text = content.strip()
+        
+        # Initialize result structure
+        result = {
+            'content': '',
+            'suggestions': []
+        }
+        
+        # Simple state machine to parse sections
+        lines = text.split('\n')
+        current_section = None
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Detect sections
+            if 'CONTENT:' in line.upper():
+                current_section = 'content'
+                continue
+            elif any(x in line.upper() for x in ['IMPROVEMENTS:', 'SUGGESTIONS:']):
+                current_section = 'suggestions'
+                continue
+                
+            # Process content based on current section
+            if current_section == 'content':
+                if result['content']:
+                    result['content'] += ' '
+                result['content'] += line
+            elif current_section == 'suggestions':
+                # Clean up formatting
+                cleaned = line.lstrip('- *1234567890.)')
+                cleaned = cleaned.strip()
+                if cleaned and len(cleaned) >= 20:
+                    result['suggestions'].append(cleaned)
+        
+        # If no proper sections were found, use the whole text as content
+        if not result['content'] and not result['suggestions']:
+            result['content'] = text
+            
+        return result
+        
+    except Exception as e:
+        logger.error(f"Failed to extract summary: {str(e)}")
+        return {'content': content, 'suggestions': []}
 
 def validate_cv_json(data, schema):
     """Validate CV JSON data against schema"""
@@ -154,28 +160,11 @@ def validate_cv_json(data, schema):
         if not isinstance(sections, dict):
             raise ValueError("'sections' must be an object")
             
-        # Required sections validation
-        if 'summary' not in sections:
-            raise ValueError("CV must include a summary section")
-            
-        # Validate experience format if present
-        if 'experience' in sections:
-            if not isinstance(sections['experience'], list):
-                raise ValueError("Experience must be an array")
-            for exp in sections['experience']:
-                if not all(k in exp for k in ['title', 'company', 'period', 'description']):
-                    raise ValueError("Experience entries must include title, company, period, and description")
-                if not isinstance(exp['description'], list):
-                    raise ValueError("Experience description must be an array")
-                    
-        # Validate education format if present
-        if 'education' in sections:
-            if not isinstance(sections['education'], list):
-                raise ValueError("Education must be an array")
-            for edu in sections['education']:
-                if not all(k in edu for k in ['degree', 'institution', 'period']):
-                    raise ValueError("Education entries must include degree, institution, and period")
-                
+        # Validate each section has content
+        for section_name, content in sections.items():
+            if not isinstance(content, str) or not content.strip():
+                raise ValueError(f"Section '{section_name}' must have non-empty string content")
+        
         # Add more specific validations as needed
         
         return True, None
@@ -183,18 +172,30 @@ def validate_cv_json(data, schema):
         return False, str(e)
 
 def validate_llm_response(content):
-    """Validate that the LLM response is properly formatted JSON"""
+    """Validate and clean up the LLM response"""
     try:
+        # If it's JSON, try to extract just the summary
         if isinstance(content, str):
-            content = json.loads(content)
-        validate(instance=content, schema=CV_SCHEMA)
-        return content
-    except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse LLM response as JSON: {e}")
-        raise ValueError("LLM response was not valid JSON")
+            try:
+                content = json.loads(content)
+                if isinstance(content, dict) and 'sections' in content:
+                    content = content['sections'].get('summary', '')
+            except json.JSONDecodeError:
+                pass  # Not JSON, treat as plain text
+                
+        # Clean up the text content
+        if isinstance(content, str):
+            content = content.strip()
+            # Remove thinking tags if present
+            if '<think>' in content:
+                parts = content.split('</think>')
+                content = parts[-1].strip() if len(parts) > 1 else content
+            return content
+        else:
+            raise ValueError("Response format not recognized")
     except Exception as e:
-        logger.error(f"JSON validation error: {e}")
-        raise ValueError("LLM response did not match expected schema")
+        logger.error(f"Error validating response: {e}")
+        raise ValueError(f"Invalid response format: {e}")
 
 def check_llm_server(url):
     """Check if LM Studio server is running and responding"""
@@ -208,44 +209,26 @@ def check_llm_server(url):
         logger.error(f"Failed to connect to LM Studio server: {e}")
         return False
 
-async def get_completion(prompt, system_prompt="", temperature=0.7):
-    """Get completion from LM Studio with proper error handling"""
-    url = "http://localhost:1234/v1/chat/completions"
+def truncate_messages(messages, max_tokens=2048):
+    """Truncate messages to stay within token limit while preserving recent context"""
+    # Approximate tokens (rough estimate: 4 chars = 1 token)
+    char_limit = max_tokens * 4
+    total_chars = 0
+    result = []
     
-    if not check_llm_server(url.rsplit("/v1/", 1)[0]):
-        raise ConnectionError("LM Studio server is not running or not responding")
-
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": prompt}
-    ]
-
-    payload = {
-        "model": "local-model",
-        "messages": messages,
-        "temperature": temperature,
-        "max_tokens": 2000
-    }
-    try:
-        headers = {
-            "Content-Type": "application/json"
-        }
-        response = requests.post(url, json=payload, headers=headers)
-        
-        if response.status_code != 200:
-            logger.error(f"LM Studio API Error: Status {response.status_code}")
-            logger.error(f"Response content: {response.text}")
-            response.raise_for_status()
+    # Process messages from most recent to oldest
+    for msg in reversed(messages):
+        content_length = len(msg["content"])
+        if total_chars + content_length <= char_limit:
+            result.insert(0, msg)
+            total_chars += content_length
+        else:
+            # Truncate the message to fit
+            available_chars = char_limit - total_chars
+            if available_chars > 100:  # Only keep if we can keep a meaningful chunk
+                truncated_msg = msg.copy()
+                truncated_msg["content"] = msg["content"][-available_chars:]
+                result.insert(0, truncated_msg)
+            break
             
-        content = response.json()['choices'][0]['message']['content']
-        
-        # Validate the response against our schema
-        validated_content = validate_llm_response(content)
-        return validated_content
-        
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Request to LM Studio failed: {e}")
-        raise
-    except Exception as e:
-        logger.error(f"Error processing LLM response: {e}")
-        raise
+    return result if result else [messages[-1]]  # Always keep at least the most recent message
